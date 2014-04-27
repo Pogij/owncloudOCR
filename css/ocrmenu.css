@@ -1,0 +1,16 @@
+#dropdown.drop-versions {
+	width: auto;
+	min-width: 25em;
+}
+
+#odfReading {
+    float: right;
+}
+
+.ocrLine {
+	color: #FFFFFF;
+}
+
+#previewLink {
+	color: #0000AA;
+}

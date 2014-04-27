@@ -1,0 +1,20 @@
+Images OCR is Owncloud app that provides OCR reading of images and PDF files that contains text in images.
+For this app to work user (server admin) has to install tesseract program. With tesseract installed 
+owncloud users will be able to execute OCR reading using installed traineddate languages.
+For pdf reading app uses OCRmyPDF scripts available on web address https://github.com/fritz-hh/OCRmyPDF.
+
+OCRmyPDF requires java runtime environment and python installed. It also requires tesseract version
+3.02 or greater (version 3.02.02 is prefered). PDF reading is only available on UNIX like server OS (images
+OCR on Windows OS will only be able to run images reading and not PDF OCR reading).
+
+For OCRmyPDF to work user must ensure, that web server user has execution rights set up for following files
+within images_ocr folder:
+						lib/OCRmyPDF/OCRmyPDF.sh
+						lib/OCRmyPDF/src/config.sh
+						lib/OCRmyPDF/src/ocrPage.sh
+						
+OCRmyPDF was tested on Ubuntu server, Debian and Windows Server 2008 R2 operating systems all running
+apache web server.
+
+If you have any problems contact me at: matevz.pogacar@google.com
+												

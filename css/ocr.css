@@ -1,0 +1,57 @@
+#ocr {
+	margin: 4em 2em 0;
+	float: left;
+}
+
+img.ocrimage {
+	min-width: 25em;
+	min-height: 25em;
+	max-width: 50em;
+	max-height: 50em;
+}
+
+#image {
+	float: left;
+	border-right-color: #DDDDDD;
+	border-right-width: 1px;
+	border-right-style: dotted;
+}
+
+
+#action {
+	margin-left: 2em;
+	margin-right: 2em;
+	margin-top: 10em;
+	float: left;
+	vertical-align: middle;
+}
+
+#ocrtext {
+	float: left;
+	border-left-color: #DDDDDD;
+	border-left-width: 1px;
+	border-left-style: dotted;
+}
+
+#textvalue {
+	max-height: 50em;
+	max-width: 50em;
+	min-height: 30em;
+	min-width: 30em;
+}
+
+textarea {
+	border: 0.2em solid #cccccc;
+	padding: 0.5em;
+	font-family: Tahoma, sans-serif;
+}
+
+#filename {
+	size=10;
+}
+
+#errorplace {
+	background-color: #AAAAAA;
+	color: #EF3333;
+	border-radius:5px;
+}

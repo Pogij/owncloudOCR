@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<info>
+	<id>images_ocr</id>
+	<name>OCR recognition for images</name>
+	<licence>AGPL</licence>
+	<author>Matevž Pogačar</author>
+	<require>4.9</require>
+	<shipped>false</shipped>
+	<description>Performs OCR recognition on selected image.</description>
+</info>
