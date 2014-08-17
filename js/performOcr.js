@@ -42,4 +42,12 @@ $(document).ready(function() {
 		    });
     	}
 	});
+    
+    
+    var imagePath = $('#imagepath').attr('value');
+    if (imagePath != '') {
+    	var path = OC.filePath('images_ocr', 'ajax', 'viewImage.php') + '?img=' + encodeURIComponent(imagePath);
+        $('#ocrimage').attr('src', path);
+    }
+    
 });

@@ -17,7 +17,12 @@ if (isset($_['message'])) {
 		$version = OC_Util::getVersion();
 		
 		$path = "";
-		if ($version[0] >= 5) {
+		if ($version[0] >= 7) {
+			$path = \OC\Files\Filesystem::getPath($_['path']);
+			$img = trim($fullPath . $_['path']);
+			echo '<img id="ocrimage" class="ocrimage" src="" alt="'.$img.'" />';
+			echo '<input type="hidden" id="imagepath" value="'.$img.'" />';
+		} elseif ($version[0] >= 5) {
 			$path = \OC_Filesystem::normalizePath($_['path']);
 			echo '<img id="ocrimage" class="ocrimage" src="'.\OC::$WEBROOT.'/index.php/?app=images_ocr&getfile=ajax%2FviewImage.php?img='.$path.'" alt="'.$path.'" />';
 		} else {

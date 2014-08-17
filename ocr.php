@@ -33,10 +33,20 @@ if (!\OC\Files\Filesystem::is_dir($dir . '/')) {
 	exit();
 }
 
-$breadcrumb = \OCA\Files\Helper::makeBreadcrumb($dir);
+$ocVersion = OC_Util::getVersion();
+
+if ($ocVersion[0] >= 7) {
+	require_once 'apps/images_ocr/lib/Helper.php';
+	$breadcrumb = makeBreadcrumb($dir);
+	$homedir = '/';
+} else {
+	$breadcrumb = \OCA\Files\Helper::makeBreadcrumb($dir);
+	$homedir = '';
+}
+
 $breadcrumbNav = new OCP\Template('files', 'part.breadcrumb', '');
 $breadcrumbNav->assign('breadcrumb', $breadcrumb);
-$breadcrumbNav->assign('baseURL', OCP\Util::linkTo('files', 'index.php') . '?dir=');
+$breadcrumbNav->assign('baseURL', OCP\Util::linkTo('files', 'index.php') . '?dir='.$homedir);
 
 $data['breadcrumb'] = $breadcrumbNav->fetchPage();
 $data['permissions'] = $permissions;
