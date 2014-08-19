@@ -89,7 +89,7 @@ if ($nameend > $namestart && $namestart >= 0) {
 }
 
 // Creatis temporary file in /tmp folder.
-$tmpfile = \OC_Filesystem::toTmpFile($image);
+$tmpfile = OC\Files\Filesystem::toTmpFile($image);
 
 
 try {
