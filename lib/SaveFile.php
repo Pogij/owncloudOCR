@@ -9,17 +9,17 @@
 function saveTextFile($filename, $folder, $text) {
 	$file = $folder . $filename . ".txt";
 	
-	$target = OC_Filesystem::normalizePath($file);
+	$target = OC\Files\Filesystem::normalizePath($file);
 	
 	// If file with the same name already exists.
 	$count = 1;
-	while (OC_Filesystem::file_exists($target) == true) {
+	while (OC\Files\Filesystem::file_exists($target) == true) {
 		$file = $folder . $filename . "(" . $count . ").txt";
-		$target = OC_Filesystem::normalizePath($file);
+		$target = OC\Files\Filesystem::normalizePath($file);
 		$count = $count + 1;
 	}
 	
-	OC_Filesystem::file_put_contents($target, $text);
+	OC\Files\Filesystem::file_put_contents($target, $text);
 }
 
 
@@ -32,15 +32,15 @@ function saveTextFile($filename, $folder, $text) {
 function savePdfFile($filename, $folder, $fileSource) {
 	$file = $folder . $filename . ".pdf";
 		
-	$target = OC_Filesystem::normalizePath($file);
+	$target = OC\Files\Filesystem::normalizePath($file);
 	
 	// If file with the same name already exists.
 	$count = 1;
-	while (OC_Filesystem::file_exists($target) == true) {
+	while (OC\Files\Filesystem::file_exists($target) == true) {
 		$file = $folder . $filename . "(" . $count . ").pdf";
-		$target = OC_Filesystem::normalizePath($file);
+		$target = OC\Files\Filesystem::normalizePath($file);
 		$count = $count + 1;
 	}
 		
-	OC_Filesystem::fromTmpFile($fileSource, $target);
+	OC\Files\Filesystem::fromTmpFile($fileSource, $target);
 }

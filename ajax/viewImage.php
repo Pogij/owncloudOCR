@@ -24,7 +24,7 @@ OCP\JSON::checkLoggedIn();
 
 $img = $_GET['img'];
 
-$view_file = OC_Filesystem::getLocalFile($img);
+$view_file = OC\Files\Filesystem::getLocalFile($img);
 
 if (file_exists($view_file)) {
 	$image = new OC_Image($view_file);
