@@ -3,21 +3,6 @@
 // In Unix system serches for tessdata location and creates link to that directory in apps/images_ocr folder.
 if (! stristr(PHP_OS, 'WIN')) {
 	
-	if (!file_exists ('apps/images_ocr/tess')) {
-		$depth = 1;
-		
-		while ($depth < 6) {
-			$depth += 1;
-			exec('find / 2>/dev/null -maxdepth '.$depth.' -name "tessdata" -type d', $result);
-			if ($result != null) {
-				if (strlen($result[0]) > 0) {
-					exec('ln -s '.$result[0].' apps/images_ocr/tess');
-					break;
-				}
-			}
-		}
-	}
-	
 	exec('tesseract -v 2>&1', $result);
 	$versioning = explode(' ', $result[0]);
 	if ($versioning[0] == "tesseract") {
@@ -43,6 +28,41 @@ if (! stristr(PHP_OS, 'WIN')) {
 	} else {
 		$pdfSupport = false;
 	}
+	
+	$versionUpdated = false;
+	$currentOwncloudVersionArray = $ocVersion = OC_Util::getVersion();
+	$lastOwncloudVersion = \OC_Appconfig::getValue('images_ocr', 'last_owncloud_version', null);
+	$lastOwncloudVersionArray = explode('_', $lastOwncloudVersion);
+	if (!is_null($lastOwncloudVersion)) {
+		foreach ($currentOwncloudVersionArray as $id => $versionNumberAtId) {
+			if ($versionNumberAtId > $lastOwncloudVersionArray[$id]) {
+				$versionUpdated = true;
+				break;
+			}
+		}
+	}
+	if (is_null($lastOwncloudVersion) || $versionUpdated == true) {
+		$versionUpdated = true;
+		\OC_Appconfig::setValue('images_ocr', 'last_owncloud_version', implode('_', $currentOwncloudVersion));
+		exec('rm -f apps/images_ocr/tess');
+	}
+	
+	
+	if (!file_exists ('apps/images_ocr/tess')) {
+		$depth = 1;
+	
+		while ($depth < 6) {
+			$depth += 1;
+			exec('find / 2>/dev/null -maxdepth '.$depth.' -name "tessdata" -type d', $result);
+			if ($result != null) {
+				if (strlen($result[0]) > 0) {
+					exec('ln -s '.$result[0].' apps/images_ocr/tess');
+					break;
+				}
+			}
+		}
+	}
+	
 	
 } else {
 	$pdfSupport = false;
