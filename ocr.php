@@ -22,6 +22,7 @@
  */
 
 OCP\User::checkLoggedIn();
+
 OCP\Util::addStyle('images_ocr','ocr');
 
 require_once 'apps/images_ocr/lib/Languages.php';
@@ -46,7 +47,7 @@ if ($ocVersion[0] >= 7) {
 	$homedir = '';
 }
 
-$breadcrumbNav = new OCP\Template('files', 'part.breadcrumb', '');
+$breadcrumbNav = new OCP\Template('images_ocr', 'part.breadcrumb', '');
 $breadcrumbNav->assign('breadcrumb', $breadcrumb);
 $breadcrumbNav->assign('baseURL', OCP\Util::linkTo('files', 'index.php') . '?dir='.$homedir);
 
@@ -67,6 +68,7 @@ if (isset($_GET['path'])) {
 	$tds = getLanguages();
 	
 	$tmpl->assign('languages', $tds);
+	$tmpl->assign('appNavigation', $nav);
 	
 	//$tess = new OCA_OcrImages\Tesseract();	//If you want to create class from a library.
 	
@@ -75,3 +77,7 @@ if (isset($_GET['path'])) {
 }
 
 $tmpl->printPage();
+
+
+
+
