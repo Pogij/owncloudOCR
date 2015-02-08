@@ -21,51 +21,29 @@
 *
 */
 
-
+OCP\JSON::checkLoggedIn();
 OCP\JSON::checkAppEnabled('images_ocr');
 $user = \OC_User::getUser();
 
-require_once 'apps/images_ocr/lib/SaveFile.php';
-
-
-
 /* READ GET VALUES. */
-$image = "";
-if (isset($_GET['image'])) {
-	$image = $_GET['image'];
-} else {
+$image = filter_input(INPUT_GET, "image");
+if ($image === null) {
 	return;
 }
 
-$language = "";
-if (isset($_GET['language'])) {
-	if ($_GET['language'] == '' or $_GET['language'] == 'null') {
-		$language = null;
-	} else {
-		$language = $_GET['language'];
-	}
-} else {
+$language = filter_input(INPUT_GET, "language");
+if ($language === null || $language == '' || $language == 'null') {
 	$language = null;
 }
 
-$filetype = "";
-if (isset($_GET['filetype'])) {
-	if ($_GET['filetype'] == '' or $_GET['filetype'] == 'null') {
-		$filetype = "image";
-	} else {
-		$filetype = $_GET['filetype'];
-	}
-} else {
+$filetype = filter_input(INPUT_GET, "filetype");
+if ($filetype === null || $filetype == '' || $filetype == 'null') {
 	$filetype = "image";
 }
 
-$save = "";
-if (isset($_GET['save'])) {
-	if ($_GET['save'] === '1') {
-		$save = true;
-	} else {
-		$save = false;
-	}
+$save = filter_input(INPUT_GET, "save");
+if ($save !== null && $save === '1') {
+	$save = true;
 } else {
 	$save = false;
 }
@@ -94,121 +72,51 @@ $tmpfile = OC\Files\Filesystem::toTmpFile($image);
 
 try {
 
-	//We define command that will be executed.
-	//In case selected file is image.
-	if ($filetype == "image") {
-	
-		$command = 'tesseract ' . $tmpfile . ' ' . $tmpfile;
-		if ($language != null) {
-			if (strlen($language) > 0) {
-				$command = $command . ' -l ' . $language;
-			}
-		}
-	
-	} else {
-	//Otherwise pdf reading.
-		exec('pwd', $_out, $success);
-		$command = $_out[0] . '/apps/images_ocr/lib/OCRmyPDF/OCRmyPDF.sh';
-		if (strlen($language) > 0) {
-			$command = $command . ' -l ' . $language;
-		}
-		$ocredPdfFile = substr($tmpfile, 0, strrpos($tmpfile, "/") + 1) . 'tmp_' . substr($tmpfile, strrpos($tmpfile, "/") + 1); 
-		$command .= ' ' . $tmpfile . ' ' . $ocredPdfFile;
-		 
-	}
-	
-	
-	/*READING EXECUTION.*/
-	if (!stristr(PHP_OS, 'WIN')) {
-		/* NON WINDOWS OS SERVER. */
-	
-		/*Executes system command tesseract, which performs OCR reading.*/
-		exec($command, $_out, $success);
-	
-		if ($success > 0) {
-			throw new Exception();
-		}
-			
-		if ($filetype == "image") {
-			$filedata = file_get_contents($tmpfile.".txt");
-			
-			/*Removes temporary file.*/
-			exec('rm ' . $tmpfile . ".txt");
-		}
-		exec('rm ' . $tmpfile);
-	
-	} else {
-		/* WINDOWS OS SERVER. */
-			
-		$descriptors = array(
-				0 => array("pipe", "r"),
-				1 => array("pipe", "w"),
-				2 => array("pipe", "w")
-		);
-		$cwd = $pathtess;
-			
-		$process = proc_open($command, $descriptors, $pipes, $cwd);
-			
-		$success = 0;
-		if(is_resource($process)) {
-			fclose($pipes[0]);
-			fclose($pipes[1]);
-			fclose($pipes[2]);
-			$success = proc_close($process);
-		}
-			
-		if ($success > 0) {
-			throw new Exception();
-		}
-			
-		$filedata = file_get_contents($tmpfile . ".txt");
-	
-		exec('cmd /c del ' . $tmpfile . '.txt');
-			
-	}
-	
-	
-	/*IF SAVE PARAMETER WAS NOT SENT FROM BROWSER THE READ DATA IS SENT BACK.*/
-	if ($save === false) {
-		$array = array("success"=>"success", "filedata"=>$filedata, "filename"=>$filename);
-		echo json_encode($array);
-		return;
-		
-	/*OTHERWISE FILE IS SAVED.*/
-	} else {
-		if ($folderBreak != false) {
-			$foldernameend = strrpos($image, "/") + 1;
-		} else {
-			$foldernameend = 0;
-		}
-		
-		$folder = substr($image, 0, $foldernameend);
-		
-		if ($filetype == "image") {
-			saveTextFile($filename, $folder, $filedata);
-			
-		} else {
-			savePdfFile($filename, $folder, $ocredPdfFile);
-			exec('rm ' . $ocredPdfFile);
-		}
-	}
-	
-	$array = array("success" => "success");
-	echo json_encode($array);
+    $tesseract = new Tesseract($tmpfile, $filetype, $language);
+    $filedata = $tesseract->executeReading();
+
+
+    /*IF SAVE PARAMETER WAS NOT SENT FROM BROWSER THE READ DATA IS SENT BACK.*/
+    if ($save === false) {
+        $array = array("success" => "success",
+                        "filedata" => $filedata,
+                        "filename" => $filename);
+        echo json_encode($array);
+        return;
+
+    /*OTHERWISE FILE IS SAVED.*/
+    } else {
+        if ($folderBreak != false) {
+            $foldernameend = strrpos($image, "/") + 1;
+        } else {
+            $foldernameend = 0;
+        }
+
+        $folder = substr($image, 0, $foldernameend);
+
+        if ($filetype == "image") {
+            $success = SaveFile::saveTextFile($filename, $folder, $filedata);
+
+        } else {
+            $success = SaveFile::savePdfFile($filename, $folder, $filedata);
+            exec('rm ' . $ocredPdfFile);
+        }
+    }
+
+    $array = array("success" => "success");
+    echo json_encode($array);
 	
 } catch (Exception $e) {
-	if (isset($_out[1]) && $_out[1] == "Page 0001: Page already contains font data !!!") {
-		$errorstring = "PDF file alredy contains font data!";
-		exec('rm ' . $tmpfile);
-	} else {
-		$errorstring = "OCR reading was not performed!<br />Check if server has installed Tesseract OCR.";
-	}
-	
-	if (stristr(PHP_OS, 'WIN')) {
-		$errorstring .= "<br />Check if IIS user (IUSR, IIS_IUSR) has granted rights for \'C:\Windows\Temp\\' folder.";
-	}
-	$array = array("success" => "error", "message" => $errorstring);
-	echo json_encode($array);
+    if (isset($_out[1]) && $_out[1] == "Page 0001: Page already contains font data !!!") {
+        $errorstring = "PDF file alredy contains font data!";
+        exec('rm ' . $tmpfile);
+    } else {
+        $errorstring = "OCR reading was not performed!<br />Check if server has installed Tesseract OCR.";
+    }
+
+    if (stristr(PHP_OS, 'WIN')) {
+        $errorstring .= "<br />Check if IIS user (IUSR, IIS_IUSR) has granted rights for \'C:\Windows\Temp\\' folder.";
+    }
+    $array = array("success" => "error", "message" => $errorstring);
+    echo json_encode($array);
 }
-
-

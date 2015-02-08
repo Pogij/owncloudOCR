@@ -19,12 +19,11 @@
 * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 *
 */
+
 OCP\JSON::checkLoggedIn();
 OCP\JSON::checkAppEnabled('images_ocr');
 
-require_once 'apps/images_ocr/lib/Languages.php';
-
-$availableLanguages = getLanguages();
+$availableLanguages = Languages::getLanguages();
 
 \OCP\JSON::success(array('languages' => $availableLanguages));
 

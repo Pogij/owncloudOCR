@@ -20,7 +20,7 @@
 */
 
 return array(
-	'list' => array('method' => 'GET', 'class' => 'ServerInfo', 'function' => 'getServerInfo',
-		'parameters' => array()
-	)
+    'list' => array('method' => 'GET', 'class' => 'ServerInfo', 'function' => 'getServerInfo',
+        'parameters' => array()
+    )
 );

@@ -22,62 +22,58 @@
  */
 
 OCP\User::checkLoggedIn();
+OCP\JSON::checkAppEnabled('images_ocr');
 
 OCP\Util::addStyle('images_ocr','ocr');
+OCP\Util::addStyle('files','files');
 
-require_once 'apps/images_ocr/lib/Languages.php';
+$path = filter_input(INPUT_GET, "path");
+$dir = $path;
+if ($dir == null) {
+    $dir = '';
+}
 
-$dir = isset( $_GET['path'] ) ? $_GET['path'] : '';
+
 $lastdir = strrpos($dir, '/');
 $dir = substr($dir, 0, $lastdir);
 $dir = \OC\Files\Filesystem::normalizePath($dir);
 if (!\OC\Files\Filesystem::is_dir($dir . '/')) {
-	header("HTTP/1.0 404 Not Found");
-	exit();
+    header("HTTP/1.0 404 Not Found");
+    exit();
 }
 
 $ocVersion = OC_Util::getVersion();
 
 if ($ocVersion[0] >= 7) {
-	require_once 'apps/images_ocr/lib/Helper.php';
-	$breadcrumb = makeBreadcrumb($dir);
-	$homedir = '/';
+    $breadcrumb = Helper::makeBreadcrumb($dir);
+    $homedir = '/';
 } else {
-	$breadcrumb = \OCA\Files\Helper::makeBreadcrumb($dir);
-	$homedir = '';
+    $breadcrumb = \OCA\Files\Helper::makeBreadcrumb($dir);
+    $homedir = '';
 }
 
 $breadcrumbNav = new OCP\Template('images_ocr', 'part.breadcrumb', '');
 $breadcrumbNav->assign('breadcrumb', $breadcrumb);
-$breadcrumbNav->assign('baseURL', OCP\Util::linkTo('files', 'index.php') . '?dir='.$homedir);
+$breadcrumbNav->assign('baseURL', OCP\Util::linkTo('files', 'index.php') . '?dir=' . $homedir);
 
 $data['breadcrumb'] = $breadcrumbNav->fetchPage();
 $data['permissions'] = $permissions;
 
 $tmpl = new OCP\Template('images_ocr', 'ocr', 'user');
 
-if (isset($_GET['path'])) {
+if ($path !== null) {
 
-	$path = $_GET['path'];
-	$path = $path;
-	$tmpl->assign('path', $path);
-	$tmpl->assign('breadcrumb', $breadcrumbNav->fetchPage());
-	
-	$result = "";
-	$success = "";
-	$tds = getLanguages();
-	
-	$tmpl->assign('languages', $tds);
-	$tmpl->assign('appNavigation', $nav);
-	
-	//$tess = new OCA_OcrImages\Tesseract();	//If you want to create class from a library.
+    $tmpl->assign('path', $path);
+    $tmpl->assign('breadcrumb', $breadcrumbNav->fetchPage());
+
+    $tds = Languages::getLanguages();
+
+    $tmpl->assign('languages', $tds);
+
+    //$tess = new OCA_OcrImages\Tesseract();	//If you want to create class from a library.
 	
 }else{
-	$tmpl->assign('message', 'No path specified');
+    $tmpl->assign('message', 'No path specified');
 }
 
 $tmpl->printPage();
-
-
-
-

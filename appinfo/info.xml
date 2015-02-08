@@ -4,7 +4,7 @@
 	<name>OCR recognition for images</name>
 	<licence>AGPL</licence>
 	<author>Matevž Pogačar</author>
-	<require>4.9</require>
+	<require>7.0</require>
 	<shipped>false</shipped>
 	<description>Performs OCR recognition on selected image.</description>
 </info>

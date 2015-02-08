@@ -21,13 +21,14 @@
  *
  */
 OCP\JSON::checkLoggedIn();
+OCP\JSON::checkAppEnabled('images_ocr');
 
-$img = $_GET['img'];
+$img = filter_input(INPUT_GET, 'img');
 
 $view_file = OC\Files\Filesystem::getLocalFile($img);
 
 if (file_exists($view_file)) {
-	$image = new OC_Image($view_file);
-	OCP\Response::enableCaching(3600 * 24); // 24 hour
-	$image->show();
+    $image = new OC_Image($view_file);
+    OCP\Response::enableCaching(3600 * 24); // 24 hour
+    $image->show();
 }

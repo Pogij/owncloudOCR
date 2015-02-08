@@ -19,20 +19,23 @@
  */
 
 
-/**
- * Splits the given path into a breadcrumb structure.
- * @param string $dir path to process
- * @return array where each entry is a hash of the absolute
- * directory path and its name
- */
-function makeBreadcrumb($dir){
-	$breadcrumb = array();
-	$pathtohere = '';
-	foreach (explode('/', $dir) as $i) {
-		if ($i !== '') {
-			$pathtohere .= '/' . $i;
-			$breadcrumb[] = array('dir' => $pathtohere, 'name' => $i);
-		}
-	}
-	return $breadcrumb;
+class Helper {
+    /**
+     * Splits the given path into a breadcrumb structure.
+     * @param string $dir path to process
+     * @return array where each entry is a hash of the absolute
+     * directory path and its name
+     */
+
+    public static function makeBreadcrumb($dir) {
+        $breadcrumb = array();
+        $pathtohere = '';
+        foreach (explode('/', $dir) as $i) {
+            if ($i !== '') {
+                $pathtohere .= '/' . $i;
+                $breadcrumb[] = array('dir' => $pathtohere, 'name' => $i);
+            }
+        }
+        return $breadcrumb;
+    }
 }
