@@ -28,24 +28,24 @@ $user = \OC_User::getUser();
 /* READ GET VALUES. */
 $image = filter_input(INPUT_GET, "image");
 if ($image === null) {
-	return;
+    return;
 }
 
 $language = filter_input(INPUT_GET, "language");
 if ($language === null || $language == '' || $language == 'null') {
-	$language = null;
+    $language = null;
 }
 
 $filetype = filter_input(INPUT_GET, "filetype");
 if ($filetype === null || $filetype == '' || $filetype == 'null') {
-	$filetype = "image";
+    $filetype = "image";
 }
 
 $save = filter_input(INPUT_GET, "save");
 if ($save !== null && $save === '1') {
-	$save = true;
+    $save = true;
 } else {
-	$save = false;
+    $save = false;
 }
 
 
@@ -55,15 +55,15 @@ if ($save !== null && $save === '1') {
 /* GET IMAGES NAME AND LOCATION. */
 $folderBreak = strrpos($image, "/");
 if ($folderBreak !== false) {
-	$namestart = strrpos($image, "/") + 1;
+    $namestart = strrpos($image, "/") + 1;
 } else {
-	$namestart = 0;
+    $namestart = 0;
 }
 $nameend = strrpos($image, ".");
 $filename = "";
 
 if ($nameend > $namestart && $namestart >= 0) {
-	$filename = substr($image, $namestart, $nameend - $namestart);
+    $filename = substr($image, $namestart, $nameend - $namestart);
 }
 
 // Creatis temporary file in /tmp folder.

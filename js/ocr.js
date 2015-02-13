@@ -11,8 +11,8 @@ OC.ImageOcr = {
             dataType: 'json',
             context: document.body
             }).done(function() {
-                if (arguments[2] != undefined) {
-                    if (arguments[2].responseJSON.status == "success") {
+                if (arguments[2] !== undefined) {
+                    if (arguments[2].responseJSON.status === "success") {
                         OC.ImageOcr.languages = arguments[2].responseJSON.languages;
                     }
                 }
@@ -22,6 +22,7 @@ OC.ImageOcr = {
 
     /**
      * Image file OCR reading is selected.
+     * @param filename
      */
     registerImg: function(filename) {
         OC.ImageOcr.register(filename, 'image');
@@ -30,6 +31,7 @@ OC.ImageOcr = {
 
     /**
      * PDF file OCR reading is selected.
+     * @param filename
      */
     registerPdf: function(filename) {
         OC.ImageOcr.register(filename, 'pdf');
@@ -38,11 +40,13 @@ OC.ImageOcr = {
 
     /**
      * Handles events.
+     * @param filename
+     * @param filetype
      */
-    register:function(fileName, filetype) {
+    register:function(filename, filetype) {
         var createDropDown = true;
         // Check if drop down is already visible for a different file.
-        if (($('#dropdown').length > 0) ) {
+        if (($('#dropdown').length > 0)) {
             //if ( $('#dropdown').hasClass('drop-versions') && file == $('#dropdown').data('file')) {
             if ( $('#dropdown').hasClass('drop-versions')) {
                 createDropDown = false;
@@ -52,7 +56,7 @@ OC.ImageOcr = {
         }
 
         if(createDropDown === true) {
-            OC.ImageOcr.showDropDown(fileName, filetype);
+            OC.ImageOcr.showDropDown(filename, filetype);
         }
 
     },
@@ -60,6 +64,8 @@ OC.ImageOcr = {
 
     /**
      * Opens drop down menu.
+     * @param filename
+     * @param filetype
      */
     showDropDown:function(filename, filetype) {
 
@@ -73,7 +79,7 @@ OC.ImageOcr = {
                 "<td>" +
                 "<select id='ocrLanguageSelect'>";
         
-        if (this.languages != undefined) {
+        if (this.languages !== undefined) {
             for (var i = 0 ; i < this.languages.length ; i++) {
                 html += "<option value='" + this.languages[i] + "'>" + this.languages[i] + "</option>";
             }
@@ -89,9 +95,9 @@ OC.ImageOcr = {
                 "</tr>" +
                 "</table>";
 
-        if (filetype == "image") {
+        if (filetype === "image") {
             // For images there is option to perform OCR reading in seperate view.
-            var ocrUrl = OC.linkTo('images_ocr', 'ocr.php') + '?path=' + encodeURIComponent($('#dir').val()).replace(/%2F/g, '/')+'/' + encodeURIComponent(filename);
+            var ocrUrl = OC.linkTo('images_ocr', 'ocr.php') + '?path=' + encodeURIComponent($('#dir').val()).replace(/%2F/g, '/') + '/' + encodeURIComponent(filename);
             html += "<hr class='ocrLine' width='90%'>";
             html += "<a id='previewLink' href='" + ocrUrl + "'>" + t('images_ocr', 'OCR reading with preview') + "</a>";
         }
@@ -114,6 +120,7 @@ OC.ImageOcr = {
 
     /**
      * Closes drop down menu.
+     * @param filename
      */
     hideDropDown:function(filename) {
         $('#dropdown').remove();
@@ -124,6 +131,8 @@ OC.ImageOcr = {
 
     /**
      * Function sends server request to execute printing.
+     * @param filename
+     * @param filetype
      */
     executeReading:function(filename, filetype) {
         var lan = $('#ocrLanguageSelect').val();
@@ -134,7 +143,7 @@ OC.ImageOcr = {
             data: "image=" + OC.get('dir').value + '/' + filename + "&language=" + lan + "&filetype=" + filetype + "&save=1",
             dataType: 'json',
             success: function(response, status) {
-                if (response.success == "error") {
+                if (response.success === "error") {
                     var alertText = t('images_ocr', response.message);
                     alertText = alertText.replace("<br />", "\n");
                     alert(alertText);

@@ -29,7 +29,7 @@ OCP\Util::addStyle('files','files');
 
 $path = filter_input(INPUT_GET, "path");
 $dir = $path;
-if ($dir == null) {
+if ($dir === null) {
     $dir = '';
 }
 

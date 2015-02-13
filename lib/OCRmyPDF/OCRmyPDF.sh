@@ -4,7 +4,8 @@
 ##############################################################################
 
 # Import required scripts
-. "`dirname $0`/src/config.sh"
+BASEPATH="$(dirname $(readlink -f $0))"
+. "$BASEPATH/src/config.sh"
 
 # Set variables corresponding to the input parameters
 ARGUMENTS="$@"
@@ -39,7 +40,7 @@ Usage: OCRmyPDF.sh  [-h] [-v] [-g] [-k] [-d] [-c] [-i] [-o dpi] [-f] [-l languag
      an oversampled image having the latter dpi value. This can improve the OCR results but can lead to a larger output PDF file.
      (default: no oversampling performed)
 -f : Force to OCR the whole document, even if some page already contain font data 
-     (which should not be the case for PDF files built from scnanned images) 
+     (which should not be the case for PDF files built from scanned images) 
 -l : Set the language of the PDF file in order to improve OCR results (default "eng")
      Any language supported by tesseract is supported (Tesseract uses 3-character ISO 639-2 language codes)
      Multiple languages may be specified, separated by '+' characters.
@@ -128,7 +129,7 @@ FILE_OUTPUT_PDFA="`absolutePath "$2"`"
 
 
 # set script path as working directory
-cd "`dirname $0`"
+cd "$BASEPATH"
 
 [ $VERBOSITY -ge $LOG_DEBUG ] && echo "$TOOLNAME version: $VERSION"
 [ $VERBOSITY -ge $LOG_DEBUG ] && echo "Arguments: $ARGUMENTS"
@@ -145,7 +146,7 @@ cd "`dirname $0`"
 ! command -v python2 > /dev/null && echo "Please install python v2.x. Exiting..." && exit $EXIT_MISSING_DEPENDENCY
 ! python2 -c 'import lxml' 2>/dev/null && echo "Please install the python library lxml. Exiting..." && exit $EXIT_MISSING_DEPENDENCY
 ! python2 -c 'import reportlab' 2>/dev/null && echo "Please install the python library reportlab. Exiting..." && exit $EXIT_MISSING_DEPENDENCY
-! command -v gs > /dev/null && echo "Please install ghostcript. Exiting..." && exit $EXIT_MISSING_DEPENDENCY
+! command -v gs > /dev/null && echo "Please install ghostscript. Exiting..." && exit $EXIT_MISSING_DEPENDENCY
 ! command -v java > /dev/null && echo "Please install java. Exiting..." && exit $EXIT_MISSING_DEPENDENCY
 
 
@@ -162,7 +163,7 @@ tesstooold=$(echo "`echo $tessversion | sed s/[.]//2`-`echo $reqtessversion | se
 
 # ensure the right GNU parallel version is installed
 # older version do not support -q flag (required to escape special characters)
-reqparallelversion="20130222"
+reqparallelversion="20121122"
 parallelversion=`parallel --minversion 0`
 ! parallel --minversion "$reqparallelversion" > /dev/null \
 	&& echo "Please install GNU parallel ${reqparallelversion} or newer (currently installed version is ${parallelversion})" && exit $EXIT_MISSING_DEPENDENCY
@@ -292,4 +293,4 @@ END=`date +%s`
 [ $VERBOSITY -ge $LOG_DEBUG ] && echo "Script took $(($END-$START)) seconds"
 
 
-[ $pdf_valid -ne 1 ] && exit $EXIT_INVALID_OUPUT_PDFA || exit 0
+[ $pdf_valid -ne 1 ] && exit $EXIT_INVALID_OUTPUT_PDFA || exit 0

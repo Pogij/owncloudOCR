@@ -71,7 +71,7 @@ class Languages {
             while (($entry = $dir->read()) !== false) {
                 if (strpos($entry, '.traineddata') > 0) {
                     $tdname = strstr($entry, '.traineddata', true);
-                    if ($tdname != "*") {
+                    if ($tdname !== "*") {
                         array_push($tds, $tdname);
                     }
                 }

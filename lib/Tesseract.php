@@ -31,7 +31,12 @@ class Tesseract {
     public function __construct($tmpfile, $filetype, $language) {
         $this->tmpfile = $tmpfile;
         $this->filetype = $filetype;
-        $this->language = $language;
+        $availableLanguages = Languages::getLanguages();
+        if (in_array($language, $availableLanguages)) {
+            $this->language = $language;
+        } else {
+            $this->language = null;
+        }
         $this->ocredFile = null;
     }
     
