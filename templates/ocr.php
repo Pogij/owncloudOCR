@@ -4,7 +4,9 @@ OCP\Util::addscript('images_ocr','performOcr');
 
 if (isset($_['message'])) {
     echo $_['message'];
-} else {
+    exit();
+}
+
 ?>
 
 <?php //$_['appNavigation']->printPage(); ?>
@@ -28,10 +30,10 @@ if (isset($_['message'])) {
                 echo '<input type="hidden" id="imagepath" value="'.$img.'" />';
             } elseif ($version[0] >= 5) {
                 $path = \OC_Filesystem::normalizePath($_['path']);
-                echo '<img id="ocrimage" class="ocrimage" src="'.\OC::$WEBROOT.'/index.php/?app=images_ocr&getfile=ajax%2FviewImage.php?img='.$path.'" alt="'.$path.'" />';
+                echo '<img id="ocrimage" class="ocrimage" src="' . \OC::$WEBROOT . '/index.php/?app=images_ocr&getfile=ajax%2FviewImage.php?img=' . $path . '" alt="' . $path . '" />';
             } else {
                 $path = \OC_Files::normalizePath($_['path']);
-                echo '<img id="ocrimage" class="ocrimage" src="'.\OC::$WEBROOT.'/?app=images_ocr&getfile=ajax%2FviewImage.php?img='.$path.'" alt="'.$path.'" />';
+                echo '<img id="ocrimage" class="ocrimage" src="' . \OC::$WEBROOT . '/?app=images_ocr&getfile=ajax%2FviewImage.php?img=' . $path . '" alt="' . $path . '" />';
             }
             ?>
         </div>
@@ -67,5 +69,3 @@ if (isset($_['message'])) {
 
     </div>
 </div>
-<?php 
-} //ends else

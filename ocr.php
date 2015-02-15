@@ -28,15 +28,14 @@ OCP\Util::addStyle('images_ocr','ocr');
 OCP\Util::addStyle('files','files');
 
 $path = filter_input(INPUT_GET, "path");
-$dir = $path;
-if ($dir === null) {
-    $dir = '';
+if ($path === null) {
+    $tmpl->assign('message', 'No path specified');
+    $tmpl->printPage();
+    exit();
 }
 
 
-$lastdir = strrpos($dir, '/');
-$dir = substr($dir, 0, $lastdir);
-$dir = \OC\Files\Filesystem::normalizePath($dir);
+$dir = \OC\Files\Filesystem::normalizePath(substr($path, 0, strrpos($path, '/')));
 if (!\OC\Files\Filesystem::is_dir($dir . '/')) {
     header("HTTP/1.0 404 Not Found");
     exit();
@@ -61,19 +60,11 @@ $data['permissions'] = $permissions;
 
 $tmpl = new OCP\Template('images_ocr', 'ocr', 'user');
 
-if ($path !== null) {
+$tmpl->assign('path', $path);
+$tmpl->assign('breadcrumb', $breadcrumbNav->fetchPage());
 
-    $tmpl->assign('path', $path);
-    $tmpl->assign('breadcrumb', $breadcrumbNav->fetchPage());
+$tds = Languages::getLanguages();
 
-    $tds = Languages::getLanguages();
-
-    $tmpl->assign('languages', $tds);
-
-    //$tess = new OCA_OcrImages\Tesseract();	//If you want to create class from a library.
-	
-}else{
-    $tmpl->assign('message', 'No path specified');
-}
+$tmpl->assign('languages', $tds);
 
 $tmpl->printPage();

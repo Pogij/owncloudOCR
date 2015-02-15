@@ -152,8 +152,11 @@ class Tesseract {
         /*Executes system command tesseract, which performs OCR reading.*/
         exec($command, $_out, $success);
 
-        if ($success > 0) {
-            throw new Exception('Tesseract reading was not executed successfully');
+        if (isset($_out[1]) && $_out[1] == "Page 0001: Page already contains font data !!!") {
+            throw new Exception('PDF file alredy contains font data!', 101);
+            exec('rm ' . $this->tmpfile);
+        } elseif ($success > 0) {
+            throw new Exception('Tesseract reading was not executed successfully', 102);
         }
 
         if ($this->filetype == "image") {
@@ -168,6 +171,8 @@ class Tesseract {
         }
 
         exec('rm ' . $this->tmpfile);
+        
+        
         
         return $filedata;
     }

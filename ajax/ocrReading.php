@@ -107,13 +107,17 @@ try {
     echo json_encode($array);
 	
 } catch (Exception $e) {
-    if (isset($_out[1]) && $_out[1] == "Page 0001: Page already contains font data !!!") {
-        $errorstring = "PDF file alredy contains font data!";
-        exec('rm ' . $tmpfile);
-    } else {
-        $errorstring = "OCR reading was not performed!<br />Check if server has installed Tesseract OCR.";
+    
+    switch ($e->getCode()) {
+        case 101:
+        case 102:
+            $errorstring = $e->getMessage();
+            break;
+        default:
+            $errorstring = "OCR reading was not performed!<br />Check if server has installed Tesseract OCR.";
+            break;
     }
-
+    
     if (stristr(PHP_OS, 'WIN')) {
         $errorstring .= "<br />Check if IIS user (IUSR, IIS_IUSR) has granted rights for \'C:\Windows\Temp\\' folder.";
     }

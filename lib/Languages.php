@@ -58,7 +58,7 @@ class Languages {
                 $tessdata_location = strstr($tloc[0], 'tesseract.exe', true)."tessdata\\";
             } else {
                 /* NON WINDOWS OS SERVER. */
-                if (file_exists ('apps/images_ocr/tess')) {
+                if (file_exists('apps/images_ocr/tess')) {
                     $tessdata_location = "apps/images_ocr/tess";
                 } else {
                     // Ubuntu Linux tesseract languages data (if writing to a app folder is disabled than the tessdata will still be found on Ubuntu server).
