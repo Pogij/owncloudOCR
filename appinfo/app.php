@@ -1,11 +1,32 @@
 <?php
+/**
+* ownCloud
+*
+* @author Matevž Pogačar
+* @copyright 2014 Matevž Pogačar <matevz.pogacar@gmail.com>
+*
+* This library is free software; you can redistribute it and/or
+* modify it under the terms of the GNU AFFERO GENERAL PUBLIC LICENSE
+* License as published by the Free Software Foundation; either
+* version 3 of the License, or any later version.
+*
+* This library is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU AFFERO GENERAL PUBLIC LICENSE for more details.
+*
+* You should have received a copy of the GNU Affero General Public
+* License along with this library.  If not, see <http://www.gnu.org/licenses/>.
+*/
 
 OC::$CLASSPATH['Languages'] = 'apps/images_ocr/lib/Languages.php';
 OC::$CLASSPATH['Helper'] = 'apps/images_ocr/lib/Helper.php';
 OC::$CLASSPATH['SaveFile'] = 'apps/images_ocr/lib/SaveFile.php';
 OC::$CLASSPATH['Tesseract'] = 'apps/images_ocr/lib/Tesseract.php';
 
-define('MAX_DEPTH_CHECK', 6);
+if (!defined('MAX_DEPTH_CHECK')) {
+    define('MAX_DEPTH_CHECK', 6);
+}
 
 // In Unix system serches for tessdata location and creates link to that directory in apps/images_ocr folder.
 if (stristr(PHP_OS, 'WIN')) {
@@ -76,7 +97,6 @@ if (stristr(PHP_OS, 'WIN')) {
 OCP\Util::addStyle('images_ocr', 'ocrmenu');
 
 OCP\Util::addScript('images_ocr', 'ocr');
-OCP\Util::addScript('files', 'fileactions');
 
 if ($pdfSupport == true) {
     OCP\Util::addScript('images_ocr', 'ocrPdfSupport');

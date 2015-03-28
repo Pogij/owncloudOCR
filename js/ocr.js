@@ -97,9 +97,9 @@ OC.ImageOcr = {
 
         if (filetype === "image") {
             // For images there is option to perform OCR reading in seperate view.
-            var ocrUrl = OC.linkTo('images_ocr', 'ocr.php') + '?path=' + encodeURIComponent($('#dir').val()).replace(/%2F/g, '/') + '/' + encodeURIComponent(filename);
+            var ocrUrl = OC.linkTo('images_ocr', 'index.php') + '?path=' + encodeURIComponent($('#dir').val()).replace(/%2F/g, '/') + '/' + encodeURIComponent(filename);
             html += "<hr class='ocrLine' width='90%'>";
-            html += "<a id='previewLink' href='" + ocrUrl + "'>" + t('images_ocr', 'OCR reading with preview') + "</a>";
+            html += "<a title='' id='previewLink' href='" + ocrUrl + "'>" + t('images_ocr', 'OCR reading with preview') + "</a>";
         }
 
         html += '</div>';

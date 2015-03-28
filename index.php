@@ -1,5 +1,4 @@
 <?php
-
 /**
  * ownCloud - OCR App
  *
@@ -21,9 +20,12 @@
  *
  */
 
+try {
 OCP\User::checkLoggedIn();
-OCP\JSON::checkAppEnabled('images_ocr');
-
+OCP\App::checkAppEnabled('images_ocr');
+} catch (Exception $e) {
+    $x = 1;
+}
 OCP\Util::addStyle('images_ocr','ocr');
 OCP\Util::addStyle('files','files');
 
@@ -68,3 +70,4 @@ $tds = Languages::getLanguages();
 $tmpl->assign('languages', $tds);
 
 $tmpl->printPage();
+
