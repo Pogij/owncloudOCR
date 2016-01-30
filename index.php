@@ -20,12 +20,9 @@
  *
  */
 
-try {
 OCP\User::checkLoggedIn();
 OCP\App::checkAppEnabled('images_ocr');
-} catch (Exception $e) {
-    $x = 1;
-}
+
 OCP\Util::addStyle('images_ocr','ocr');
 OCP\Util::addStyle('files','files');
 

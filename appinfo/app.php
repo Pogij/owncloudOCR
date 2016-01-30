@@ -39,31 +39,25 @@ if (stristr(PHP_OS, 'WIN')) {
     $versioning = explode(' ', $result[0]);
     if ($versioning[0] == "tesseract") {
         $versions = explode('.', $versioning[1]);
-        $versionNumbers = count($versions);
-        if ($versionNumbers > 2) {
-            if ($versions[0] > 3) {
+        
+        $pdfSupport = false;
+        if (intval($versions[0]) >= 3) {
+            if (intval($versions[0]) > 3) {
                 $pdfSupport = true;
-            } elseif ($versions[0] == 3 && $versions[1] >= 2 && $versions[2] >= 1) {
+            } elseif (intval($versions[1]) > 2) {
                 $pdfSupport = true;
-            } else {
-                $pdfSupport = false;
-            }
-        } else {
-            if ($versions[0] > 3) {
-                $pdfSupport = true; 
-            } elseif ($versions[0] == 3 && $versions[1] > 2) {
+            } elseif (intval($versions[1]) == 2 && isset($versions[2]) && $versions[2] >= 1) {
                 $pdfSupport = true;
-            } else {
-                $pdfSupport = false;
             }
         }
     } else {
         $pdfSupport = false;
     }
 
+    $config = \OC::$server->getConfig();
     $versionUpdated = false;
-    $currentOwncloudVersionArray = $ocVersion = OC_Util::getVersion();
-    $lastOwncloudVersion = \OC_Appconfig::getValue('images_ocr', 'last_owncloud_version');
+    $currentOwncloudVersionArray = OC_Util::getVersion();
+    $lastOwncloudVersion = $config->getAppValue('images_ocr', 'last_owncloud_version');
     $lastOwncloudVersionArray = explode('_', $lastOwncloudVersion);
     if (!is_null($lastOwncloudVersion)) {
         foreach ($currentOwncloudVersionArray as $id => $versionNumberAtId) {
@@ -75,12 +69,12 @@ if (stristr(PHP_OS, 'WIN')) {
     }
     if (is_null($lastOwncloudVersion) || $versionUpdated == true) {
         $versionUpdated = true;
-        \OC_Appconfig::setValue('images_ocr', 'last_owncloud_version', implode('_', $currentOwncloudVersionArray));
+        $config->setAppValue('images_ocr', 'last_owncloud_version', implode('_', $currentOwncloudVersionArray));
         exec('rm -f apps/images_ocr/tess');
     }
 
 
-    if (!file_exists ('apps/images_ocr/tess')) {
+    if (!file_exists('apps/images_ocr/tess')) {
         $depth = 1;
 
         while ($depth < MAX_DEPTH_CHECK) {
