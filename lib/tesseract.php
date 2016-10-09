@@ -14,6 +14,8 @@
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+namespace OCA\Images_Ocr;
+
 class Tesseract {
     
     private $tmpfile;
@@ -87,12 +89,12 @@ class Tesseract {
         $filedata = '';
         
         /*READING EXECUTION.*/
-        if (!stristr(PHP_OS, 'WIN')) {
-            /* NON WINDOWS OS SERVER. */
-            $filedata = $this->executeTesseractLin($command);
-        } else {
+        if (stristr(PHP_OS, 'WIN')) {
             /* WINDOWS OS SERVER. */
             $filedata = $this->executeTesseractWin($command);
+        } else {
+            /* NON WINDOWS OS SERVER. */
+            $filedata = $this->executeTesseractLin($command);
         }
         
         return $filedata;
@@ -147,6 +149,7 @@ class Tesseract {
      */
     private function executeTesseractLin($command) {
         
+        $_out = null;
         $success = 0;
         
         /*Executes system command tesseract, which performs OCR reading.*/

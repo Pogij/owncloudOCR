@@ -4,7 +4,11 @@
 	<name>OCR recognition for images</name>
 	<licence>AGPL</licence>
 	<author>Matevž Pogačar</author>
+        <dependencies>
+		<owncloud min-version="9.0" max-version="9.1" />
+	</dependencies>
 	<require>8.0</require>
 	<shipped>false</shipped>
+        <version>1.01</version>
 	<description>Performs OCR recognition on selected image.</description>
 </info>

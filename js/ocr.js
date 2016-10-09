@@ -1,9 +1,11 @@
-OC.ImageOcr = {
+var ImageOcr = ImageOcr || {};
 
+
+(function(window, $, exports, undefined) {
     /**
      * On load app gets server info (which tesseract languages are installed).
      */
-    initialize: function() {
+    exports.initialize = function() {
         var ocrUrl = OC.linkTo('images_ocr', 'ajax/getServerInfo.php');
         $.ajax({
             type: 'GET',
@@ -13,7 +15,7 @@ OC.ImageOcr = {
             }).done(function() {
                 if (arguments[2] !== undefined) {
                     if (arguments[2].responseJSON.status === "success") {
-                        OC.ImageOcr.languages = arguments[2].responseJSON.languages;
+                        ImageOcr.languages = arguments[2].responseJSON.languages;
                     }
                 }
             });
@@ -24,8 +26,8 @@ OC.ImageOcr = {
      * Image file OCR reading is selected.
      * @param filename
      */
-    registerImg: function(filename) {
-        OC.ImageOcr.register(filename, 'image');
+    exports.registerImg = function(filename) {
+        ImageOcr.register(filename, 'image');
     },
 
 
@@ -33,8 +35,8 @@ OC.ImageOcr = {
      * PDF file OCR reading is selected.
      * @param filename
      */
-    registerPdf: function(filename) {
-        OC.ImageOcr.register(filename, 'pdf');
+    exports.registerPdf = function(filename) {
+        ImageOcr.register(filename, 'pdf');
     },
 
 
@@ -43,7 +45,7 @@ OC.ImageOcr = {
      * @param filename
      * @param filetype
      */
-    register:function(filename, filetype) {
+    exports.register = function(filename, filetype) {
         var createDropDown = true;
         // Check if drop down is already visible for a different file.
         if (($('#dropdown').length > 0)) {
@@ -56,7 +58,7 @@ OC.ImageOcr = {
         }
 
         if(createDropDown === true) {
-            OC.ImageOcr.showDropDown(filename, filetype);
+            ImageOcr.showDropDown(filename, filetype);
         }
 
     },
@@ -67,7 +69,7 @@ OC.ImageOcr = {
      * @param filename
      * @param filetype
      */
-    showDropDown:function(filename, filetype) {
+    exports.showDropDown = function(filename, filetype) {
 
         var html = '<div id="dropdown" class="drop drop-versions">';
 
@@ -113,7 +115,7 @@ OC.ImageOcr = {
         }
 
         $("#odfReading").click(function() {
-            OC.ImageOcr.executeReading(filename, filetype);
+            ImageOcr.executeReading(filename, filetype);
         });
     },
 
@@ -122,7 +124,7 @@ OC.ImageOcr = {
      * Closes drop down menu.
      * @param filename
      */
-    hideDropDown:function(filename) {
+    exports.hideDropDown = function(filename) {
         $('#dropdown').remove();
         fileEl = FileList.findFileEl(filename);
         fileEl.removeClass('mouseOver');
@@ -134,7 +136,7 @@ OC.ImageOcr = {
      * @param filename
      * @param filetype
      */
-    executeReading:function(filename, filetype) {
+    exports.executeReading = function(filename, filetype) {
         var lan = $('#ocrLanguageSelect').val();
         document.getElementById("ocrLoading").style.visibility = "visible";
         $.ajax({
@@ -148,10 +150,10 @@ OC.ImageOcr = {
                     alertText = alertText.replace("<br />", "\n");
                     alert(alertText);
                 }
-                OC.ImageOcr.hideDropDown(filename);
+                ImageOcr.hideDropDown(filename);
 
                 FileList.reload();
             }
         });
     }
-};
+}) (window, jQuery, ImageOcr);

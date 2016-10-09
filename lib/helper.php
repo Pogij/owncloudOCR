@@ -18,6 +18,7 @@
  *
  */
 
+namespace OCA\Images_Ocr;
 
 class Helper {
     /**

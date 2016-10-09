@@ -20,6 +20,7 @@
 *
 */
 
+use OCA\Images_Ocr\Languages;
 OCP\JSON::checkLoggedIn();
 OCP\JSON::checkAppEnabled('images_ocr');
 

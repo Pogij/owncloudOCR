@@ -21,6 +21,11 @@
 *
 */
 
+use \OC\Files\Filesystem;
+
+use OCA\Images_Ocr\Tesseract;
+use OCA\Images_Ocr\SaveFile;
+
 OCP\JSON::checkLoggedIn();
 OCP\JSON::checkAppEnabled('images_ocr');
 $user = \OC_User::getUser();
@@ -67,11 +72,9 @@ if ($nameend > $namestart && $namestart >= 0) {
 }
 
 // Creatis temporary file in /tmp folder.
-$tmpfile = OC\Files\Filesystem::toTmpFile($image);
-
+$tmpfile = Filesystem::toTmpFile($image);
 
 try {
-
     $tesseract = new Tesseract($tmpfile, $filetype, $language);
     $filedata = $tesseract->executeReading();
 
@@ -111,6 +114,7 @@ try {
     switch ($e->getCode()) {
         case 101:
         case 102:
+        case 103:
             $errorstring = $e->getMessage();
             break;
         default:

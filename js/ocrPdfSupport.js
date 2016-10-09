@@ -9,16 +9,16 @@ $(document).ready(function() {
             t('images_ocr', 'OCR Read'),
             OC.PERMISSION_UPDATE,
             OC.imagePath('images_ocr', 'imageOcr.svg'),
-            OC.ImageOcr.registerImg
+            ImageOcr.registerImg
         );
         OCA.Files.fileActions.register(
             'application/pdf',
             t('images_ocr', 'OCR Read'),
             OC.PERMISSION_UPDATE,
             OC.imagePath('images_ocr', 'imageOcr.svg'),
-            OC.ImageOcr.registerPdf
+            ImageOcr.registerPdf
         );
     }
 
-    OC.ImageOcr.initialize();
+    ImageOcr.initialize();
 });

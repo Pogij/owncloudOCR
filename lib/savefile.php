@@ -14,6 +14,10 @@
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+namespace OCA\Images_Ocr;
+
+use \OC\Files\Filesystem;
+
 class SaveFile {
     
     /**
@@ -27,7 +31,7 @@ class SaveFile {
         $success = true;
         try {
             $target = self::executeSaveFile($filename, $folder, 'txt');
-            OC\Files\Filesystem::file_put_contents($target, $text);
+            \OC\Files\Filesystem::file_put_contents($target, $text);
         } catch (Exception $e) {
             $success = false;
         }
@@ -47,7 +51,7 @@ class SaveFile {
         $success = true;
         try {
             $target = self::executeSaveFile($filename, $folder, 'pdf');
-            OC\Files\Filesystem::fromTmpFile($fileSource, $target);
+            Filesystem::fromTmpFile($fileSource, $target);
         } catch (Exception $e) {
             $success = false;
         }
@@ -66,13 +70,13 @@ class SaveFile {
      */
     private static function executeSaveFile($filename, $folder, $extension) {
         
-        $target = OC\Files\Filesystem::normalizePath($folder . $filename . '.' . $extension);
+        $target =Filesystem::normalizePath($folder . $filename . '.' . $extension);
 
         // If file with the same name already exists.
         $count = 1;
-        while (OC\Files\Filesystem::file_exists($target) == true) {
+        while (Filesystem::file_exists($target) == true) {
             $file = $folder . $filename . '(' . $count . ').' . $extension;
-            $target = OC\Files\Filesystem::normalizePath($file);
+            $target = Filesystem::normalizePath($file);
             $count = $count + 1;
             if ($count > 1000) {
                 throw new Exception('Unable to find accessible file location');

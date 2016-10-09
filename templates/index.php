@@ -1,15 +1,15 @@
 <?php
 
+use OC\Files\Filesystem;
+
 OCP\Util::addscript('images_ocr','performOcr');
 
 if (isset($_['message'])) {
     echo $_['message'];
     exit();
 }
-
 ?>
 
-<?php //$_['appNavigation']->printPage(); ?>
 
 <div id="ocrcontent">
     <div id="controls">
@@ -20,21 +20,10 @@ if (isset($_['message'])) {
 
         <div id="image">
             <?php
-            $version = OC_Util::getVersion();
-
-            $path = "";
-            if ($version[0] >= 7) {
-                $path = \OC\Files\Filesystem::getPath($_['path']);
-                $img = trim($fullPath . $_['path']);
-                echo '<img id="ocrimage" class="ocrimage" src="" alt="'.$img.'" />';
-                echo '<input type="hidden" id="imagepath" value="'.$img.'" />';
-            } elseif ($version[0] >= 5) {
-                $path = \OC_Filesystem::normalizePath($_['path']);
-                echo '<img id="ocrimage" class="ocrimage" src="' . \OC::$WEBROOT . '/index.php/?app=images_ocr&getfile=ajax%2FviewImage.php?img=' . $path . '" alt="' . $path . '" />';
-            } else {
-                $path = \OC_Files::normalizePath($_['path']);
-                echo '<img id="ocrimage" class="ocrimage" src="' . \OC::$WEBROOT . '/?app=images_ocr&getfile=ajax%2FviewImage.php?img=' . $path . '" alt="' . $path . '" />';
-            }
+            $path = Filesystem::getLocalPath($_['path']);
+            $img = trim($fullPath . $_['path']);
+            echo '<img id="ocrimage" class="ocrimage" src="" alt="' . $img . '" />';
+            echo '<input type="hidden" id="imagepath" value="' . $img . '" />';
             ?>
         </div>
 
@@ -43,11 +32,12 @@ if (isset($_['message'])) {
             <select id="language">
                     <?php
                     foreach($_['languages'] as $language) {
+                        $selected = '';
                         if ($language == "eng") {
-                            print("<option value=\"$language\" selected=\"selected\">$language</option>");
-                        } else {
-                            print("<option value=\"$language\">$language</option>");
+                            $selected = ' selected="selected"';
                         }
+                        
+                        echo '<option value="' . $language . '"' . $selected . '>' . $language . '</option>';
                     }
                     ?>
             </select>

@@ -21,8 +21,25 @@
 
 /** @var $this OC\Route\Router */
 
-$this->create('images_ocr_ocr', '/')
-	->actionInclude('images_ocr/index.php');
+
+namespace OCA\Images_Ocr\AppInfo;
+
+$application = new Application();
+$application->registerRoutes(
+	$this,
+	array(
+		'routes' => array(
+			[
+				'name' => 'view#index',
+				'url' => '/',
+				'verb' => 'GET',
+			],
+		)
+	)
+);
+
+$this->create('images_ocr_preview', '/')
+	->actionInclude('images_ocr/preview.php');
 $this->create('images_ocr_getServerInfo', 'ajax/getServerInfo.php')
         ->actionInclude('images_ocr/ajax/getServerInfo.php');
 $this->create('images_ocr_ocrReading', 'ajax/ocrReading.php')

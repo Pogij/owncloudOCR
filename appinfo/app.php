@@ -19,18 +19,26 @@
 * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-OC::$CLASSPATH['Languages'] = 'apps/images_ocr/lib/Languages.php';
-OC::$CLASSPATH['Helper'] = 'apps/images_ocr/lib/Helper.php';
-OC::$CLASSPATH['SaveFile'] = 'apps/images_ocr/lib/SaveFile.php';
-OC::$CLASSPATH['Tesseract'] = 'apps/images_ocr/lib/Tesseract.php';
+
+//\OCP\App::addNavigationEntry(array(
+//    'id' => 'imagesOcr',
+//    'order' => 10,
+//    'icon' => \OCP\Util::imagePath('images_ocr', 'app.svg'),
+//    'name' => \OC_L10N::get('images_ocr')->t('Images OCR')
+    // the route that will be shown on startup
+//    'href' => \OCP\Util::linkToRoute('myapp.page.index'),  
+//));
+
+
 
 if (!defined('MAX_DEPTH_CHECK')) {
     define('MAX_DEPTH_CHECK', 6);
 }
 
+
 // In Unix system serches for tessdata location and creates link to that directory in apps/images_ocr folder.
 if (stristr(PHP_OS, 'WIN')) {
-	
+
     $pdfSupport = false;
 	
 } else {
@@ -80,6 +88,7 @@ if (stristr(PHP_OS, 'WIN')) {
         while ($depth < MAX_DEPTH_CHECK) {
             $depth += 1;
             exec('find / 2>/dev/null -maxdepth '.$depth.' -name "tessdata" -type d', $result);
+            printf($result);
             if ($result != null && strlen($result[0]) > 0) {
                 exec('ln -s '.$result[0].' apps/images_ocr/tess');
                 break;
@@ -88,13 +97,12 @@ if (stristr(PHP_OS, 'WIN')) {
     }
 }
 
-OCP\Util::addStyle('images_ocr', 'ocrmenu');
+\OCP\Util::addStyle('images_ocr', 'ocrmenu');
 
-OCP\Util::addScript('images_ocr', 'ocr');
+\OCP\Util::addScript('images_ocr', 'ocr');
 
 if ($pdfSupport == true) {
-    OCP\Util::addScript('images_ocr', 'ocrPdfSupport');
+    \OCP\Util::addScript('images_ocr', 'ocrPdfSupport');
 } else {
-    OCP\Util::addScript('images_ocr', 'ocrNoPdfSupport');
+    \OCP\Util::addScript('images_ocr', 'ocrNoPdfSupport');
 }
-
