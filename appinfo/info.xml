@@ -5,7 +5,7 @@
 	<licence>AGPL</licence>
 	<author>Matevž Pogačar</author>
         <dependencies>
-		<owncloud min-version="9.0" max-version="9.1" />
+		<owncloud min-version="9.0" max-version="10.9" />
 	</dependencies>
 	<require>8.0</require>
 	<shipped>false</shipped>
